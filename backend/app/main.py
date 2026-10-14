@@ -1,10 +1,12 @@
+import logging
+from app.services.email_service import send_otp_email, smtp_configured
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import time
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(override=True)
 
 from pathlib import Path
 import sys
@@ -105,19 +107,85 @@ async def health(): return {"status":"healthy","version":"6.0.0","ml":"scikit-le
 # ----------------------------------------------------------------------
 # Auth
 # ----------------------------------------------------------------------
-async def _issue_otp(user_id: str, email: str, purpose: str):
+# async def _issue_otp(user_id: str, email: str, purpose: str):
+#     if not smtp_configured():
+#         raise HTTPException(503, "Gmail SMTP is not configured. Add GMAIL_SMTP_USERNAME and GMAIL_SMTP_APP_PASSWORD to backend/.env.")
+#     otp = generate_otp()
+#     expires = datetime.now(timezone.utc) + timedelta(minutes=OTP_EXPIRE_MINUTES)
+#     if not users.set_otp(user_id, hash_otp(otp), expires.isoformat(), purpose):
+#         raise HTTPException(500, "Could not create OTP challenge.")
+#     try:
+#         await asyncio.to_thread(send_otp_email, email, otp, purpose)
+#     except Exception:
+#         users.clear_otp(user_id)
+#         raise HTTPException(502, "Could not send the OTP email. Check Gmail SMTP settings and App Password.")
+#     return OtpResponse(message="OTP sent to your email address.", email=email, expires_in_seconds=OTP_EXPIRE_MINUTES * 60)
+
+async def _issue_otp(
+    user_id: str,
+    email: str,
+    purpose: str,
+):
     if not smtp_configured():
-        raise HTTPException(503, "Gmail SMTP is not configured. Add GMAIL_SMTP_USERNAME and GMAIL_SMTP_APP_PASSWORD to backend/.env.")
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "OTP email is not configured. "
+                "Set BREVO_API_KEY and BREVO_SENDER_EMAIL "
+                "in Render Environment."
+            ),
+        )
+
     otp = generate_otp()
-    expires = datetime.now(timezone.utc) + timedelta(minutes=OTP_EXPIRE_MINUTES)
-    if not users.set_otp(user_id, hash_otp(otp), expires.isoformat(), purpose):
-        raise HTTPException(500, "Could not create OTP challenge.")
+
+    expires = (
+        datetime.now(timezone.utc)
+        + timedelta(minutes=OTP_EXPIRE_MINUTES)
+    )
+
+    if not users.set_otp(
+        user_id,
+        hash_otp(otp),
+        expires.isoformat(),
+        purpose,
+    ):
+        raise HTTPException(
+            status_code=500,
+            detail="Could not create OTP challenge.",
+        )
+
     try:
-        await asyncio.to_thread(send_otp_email, email, otp, purpose)
-    except Exception:
+        await asyncio.to_thread(
+            send_otp_email,
+            email,
+            otp,
+            purpose,
+        )
+    except Exception as exc:
+        logging.getLogger(__name__).exception(
+            "OTP email delivery failed"
+        )
+
+        print(
+            f"[LANDWISE OTP ERROR] {type(exc).__name__}: {exc}",
+            flush=True,
+        )
+
         users.clear_otp(user_id)
-        raise HTTPException(502, "Could not send the OTP email. Check Gmail SMTP settings and App Password.")
-    return OtpResponse(message="OTP sent to your email address.", email=email, expires_in_seconds=OTP_EXPIRE_MINUTES * 60)
+
+        raise HTTPException(
+            status_code=502,
+            detail=(
+                "Could not send the OTP email. "
+                "Check the backend email provider configuration and logs."
+            ),
+        )
+
+    return OtpResponse(
+        message="OTP sent to your email address.",
+        email=email,
+        expires_in_seconds=OTP_EXPIRE_MINUTES * 60,
+    )
 
 
 @app.post("/auth/signup", response_model=OtpResponse)

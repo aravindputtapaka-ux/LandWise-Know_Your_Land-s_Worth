@@ -1,4 +1,9 @@
-export const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
+export const API_BASE = (
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.PROD
+    ? "https://landwise-backend-9kki.onrender.com"
+    : "http://localhost:8000")
+).replace(/\/+$/, "");
 
 export class ApiError extends Error {
   status: number;
