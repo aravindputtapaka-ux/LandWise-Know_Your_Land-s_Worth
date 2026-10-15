@@ -743,3 +743,13 @@ footer { padding: 15px 0 4px; display: flex; justify-content: center; align-item
 .forecast-trend-panel .range-zigzag-line { stroke: #c39cff; }
 .forecast-trend-panel .min-label { fill: #ffb45e; }
 .forecast-trend-panel .max-label { fill: #ff6f91; }
+.landing-topbar .landing-brand-logo {
+  display: block;
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+/* Password recovery stays beside the login credentials. */
+.auth-forgot { margin: 0 0 16px; text-align: right; }
+.auth-forgot button { font-size: 10px; padding: 6px 0; }

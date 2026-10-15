@@ -1,14 +1,14 @@
 import logging
-from app.services.email_service import send_otp_email, smtp_configured
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import time
 from dotenv import load_dotenv
-load_dotenv(override=True)
-
 from pathlib import Path
+
+# Load backend configuration before importing services that read email credentials.
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 import sys
 import asyncio
 from app.services import market_cache

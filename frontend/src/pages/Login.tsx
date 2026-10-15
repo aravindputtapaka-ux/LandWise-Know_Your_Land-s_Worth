@@ -26,10 +26,10 @@ export default function Login({ onBack, onSwitchToSignup, onForgot, onSuccess }:
         <form onSubmit={submit}>
           <div className="field"><label>EMAIL</label><div className="search-box"><Mail size={16} /><input type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required /></div></div>
           <div className="field"><label>PASSWORD</label><div className="search-box"><Lock size={16} /><input type={showPassword ? "text" : "password"} autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(v => !v)}>{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}</button></div></div>
+          <p className="auth-switch auth-forgot"><button type="button" onClick={onForgot}>Forgot password?</button></p>
           <button className="analyze" disabled={busy} type="submit">{busy ? <><Loader2 size={17} className="spin" /> Signing in...</> : <>Log in<ArrowRight size={18} /></>}</button>
           {error && <div className="error">{error}</div>}
         </form>
-        <p className="auth-switch"><button onClick={onForgot}>Forgot password?</button></p>
         <p className="auth-switch">New to LandWise AI? <button onClick={onSwitchToSignup}>Create an account</button></p>
       </div>
     </main>

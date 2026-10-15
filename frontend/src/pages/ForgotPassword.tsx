@@ -43,7 +43,7 @@ export default function ForgotPassword({ onBack, onLogin }: { onBack: () => void
     <button className="back-button auth-back" onClick={onBack}><ArrowLeft size={16} /> Back</button>
     <div className="brand auth-brand"><span className="brand-icon"><Sparkles size={15} /></span><span>LandWise <b>AI</b></span></div>
     {step === "email" ? <>
-      <h1>Forgot password?</h1><p className="subtitle">Enter your verified email and we'll send a 6-digit OTP through Gmail.</p>
+      <h1>Forgot password?</h1><p className="subtitle">Enter your verified email and we'll send a 6-digit OTP to your inbox.</p>
       <form onSubmit={sendOtp}><div className="field"><label>EMAIL</label><div className="search-box"><Mail size={16} /><input type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required /></div></div>
       <button className="analyze" disabled={busy} type="submit">{busy ? <><Loader2 size={17} className="spin" /> Sending OTP...</> : <>Send OTP<ArrowRight size={18} /></>}</button>
       </form>

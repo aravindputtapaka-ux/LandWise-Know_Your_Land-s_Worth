@@ -14,7 +14,12 @@ export default function Landing({ onLogin, onSignup, onDocs }: { onLogin: () => 
       <div className="background-glow glow-b" />
       <div className="landing-shell">
         <header className="topbar landing-topbar">
-          <div className="brand"><span className="brand-icon"><Sparkles size={15} /></span><span>LandWise <b>AI</b></span></div>
+          <div className="brand">
+  <img
+    src="/landwise-logo.png"
+    alt="LandWise AI"
+    className="landing-brand-logo"
+  /><span>LandWise <b>AI</b></span></div>
           <div className="landing-topbar-actions">
             <button className="ghost-btn" onClick={onDocs}><BookOpen size={15}/> Docs</button>
             <button className="ghost-btn" onClick={onLogin}>Log in</button>
