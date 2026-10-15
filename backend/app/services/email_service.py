@@ -119,6 +119,13 @@ def _send(to_email: str, subject: str, body: str) -> None:
                 json=payload,
             )
 
+        if response.status_code >= 400:
+            logger.error(
+                "BREVO_ERROR: status=%s body=%s",
+                response.status_code,
+                response.text[:1000],
+            )
+
             response.raise_for_status()
 
     except httpx.HTTPStatusError as exc:
