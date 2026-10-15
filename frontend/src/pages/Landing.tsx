@@ -1,4 +1,4 @@
-import { ArrowRight, BarChart3, MapPin, ShieldCheck, Sparkles, Target, TrendingUp } from "lucide-react";
+import { ArrowRight, BarChart3, MapPin, BookOpen, ShieldCheck, Sparkles, Target, TrendingUp } from "lucide-react";
 
 const FEATURES = [
   { icon: <TrendingUp size={18}/>, title: "Real-time comparables", body: "Every estimate is built from current web evidence discovered and extracted live, not a stale dataset." },
@@ -7,7 +7,7 @@ const FEATURES = [
   { icon: <Target size={18}/>, title: "Affordability planning", body: "Turn a budget into purchasable land area, or see what 1–5 BHK homes you can actually afford." },
 ];
 
-export default function Landing({ onLogin, onSignup }: { onLogin: () => void; onSignup: () => void }) {
+export default function Landing({ onLogin, onSignup, onDocs }: { onLogin: () => void; onSignup: () => void; onDocs: () => void }) {
   return (
     <main className="app landing">
       <div className="background-glow glow-a" />
@@ -16,6 +16,7 @@ export default function Landing({ onLogin, onSignup }: { onLogin: () => void; on
         <header className="topbar landing-topbar">
           <div className="brand"><span className="brand-icon"><Sparkles size={15} /></span><span>LandWise <b>AI</b></span></div>
           <div className="landing-topbar-actions">
+            <button className="ghost-btn" onClick={onDocs}><BookOpen size={15}/> Docs</button>
             <button className="ghost-btn" onClick={onLogin}>Log in</button>
             <button className="analyze landing-cta-small" onClick={onSignup}>Sign up<ArrowRight size={15} /></button>
           </div>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "./auth/AuthContext";
 import Landing from "./pages/Landing";
+import Docs from "./pages/Docs";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -11,11 +12,12 @@ import type { Result } from "./pages/Estimator";
 import GuestChatWidget from "./components/GuestChatWidget";
 import "./styles.css";
 
-type View = "landing" | "login" | "signup" | "forgot" | "app" | "history";
+type View = "landing" | "login" | "signup" | "forgot" | "app" | "history" | "docs";
 
-function LandingWithVideo({ onLogin, onSignup }: {
+function LandingWithVideo({ onLogin, onSignup, onDocs }: {
   onLogin: () => void;
   onSignup: () => void;
+  onDocs: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -61,7 +63,7 @@ function LandingWithVideo({ onLogin, onSignup }: {
       />
       <div className="lw-video-overlay" aria-hidden="true" />
       <div className="lw-video-content">
-        <Landing onLogin={onLogin} onSignup={onSignup} />
+        <Landing onLogin={onLogin} onSignup={onSignup} onDocs={onDocs} />
       </div>
       {/* {!videoFailed && (
         <button type="button" className="lw-video-toggle" onClick={toggleVideo}>
@@ -95,6 +97,10 @@ export default function App() {
     );
   }
 
+  if (view === "docs") {
+    return <Docs onBack={() => setView(user && token ? "app" : "landing")} onGetStarted={() => setView(user && token ? "app" : "signup")} />;
+  }
+
   if (user && token) {
     if (view === "history") {
       return (
@@ -119,6 +125,7 @@ export default function App() {
           userName={user.name}
           onLogout={handleLogout}
           onOpenHistory={() => setView("history")}
+          onOpenDocs={() => setView("docs")}
           initialResult={openResult}
         />
         <ChatWidget key={user.id} token={token} />
@@ -159,6 +166,7 @@ export default function App() {
       <LandingWithVideo
         onLogin={() => setView("login")}
         onSignup={() => setView("signup")}
+        onDocs={() => setView("docs")}
       />
       <GuestChatWidget
         onLogin={() => setView("login")}

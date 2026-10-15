@@ -1,6 +1,6 @@
 import LocationMapPicker from "../components/LocationMapPicker";
 import { useEffect, useState, ReactNode } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, ChevronDown, Clock, Crosshair, ExternalLink, LogOut, Loader2, MapPin, Search, Sparkles, Target, TrendingUp } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, ChevronDown, Clock, Crosshair, ExternalLink, LogOut, Loader2, MapPin, Search, Sparkles, Target, TrendingUp } from "lucide-react";
 import { api, ApiError } from "../api";
 
 const PROPERTY_TYPES = [
@@ -25,7 +25,7 @@ function num(n:number){return Number(n).toLocaleString("en-IN",{maximumFractionD
 function labelType(v:string){return PROPERTY_TYPES.find(x=>x.value===v)?.label.replace(/^\S+\s/,'')||v}
 function Select({value,onChange,options}:{value:string;onChange:(v:string)=>void;options:string[]}){return <div className="select-box"><select value={value} onChange={e=>onChange(e.target.value)}>{options.map(x=><option key={x} value={x}>{x}</option>)}</select><ChevronDown size={16}/></div>}
 
-export default function Estimator({token,userName,onLogout,onOpenHistory,initialResult}:{token:string;userName:string;onLogout:()=>void;onOpenHistory:()=>void;initialResult?:{result:Result;mode:Mode}|null}){
+export default function Estimator({token,userName,onLogout,onOpenHistory,onOpenDocs,initialResult}:{token:string;userName:string;onLogout:()=>void;onOpenHistory:()=>void;onOpenDocs:()=>void;initialResult?:{result:Result;mode:Mode}|null}){
  const [mapPickerOpen,setMapPickerOpen]=useState(false);
  const [propertyType,setPropertyType]=useState("land"); const [mode,setMode]=useState<Mode>(initialResult?.mode||"price"); const [location,setLocation]=useState(""); const [places,setPlaces]=useState<Place[]>([]); const [coords,setCoords]=useState<{lat:number;lon:number}|null>(null);
 //  const [bhk,setBhk]=useState("2 BHK"); const [status,setStatus]=useState("Ready to Move");
@@ -82,7 +82,7 @@ if (mode === "price") {
  
  const endpoint=mode==="price" ? "/property-price" : "/affordability";const d=await api<Result>(endpoint,{method:"POST",body,token});if(mode==="price" && !(d.price_per_unit!>0) && !(d.average_price!&&d.average_price>0))throw Error("No usable property-price evidence was returned.");if(mode==="affordability" && !d.options?.length && !(d.affordable_area!>0))throw Error("No usable affordability evidence was returned.");setResult(d)}catch(e:any){if(e instanceof ApiError && e.status===401){onLogout();return}setError(e.message||"Could not connect to LandWise AI.")}finally{setBusy(false)}}
  
- const nav=<div className="topbar"><div className="brand"><span className="brand-icon"><Sparkles size={15}/></span><span>LandWise <b>AI</b></span></div><div className="user-nav">{result?.search_id&&<button className="ghost-btn" onClick={()=>window.dispatchEvent(new CustomEvent("landwise:ask",{detail:result.search_id}))}>Ask about this result</button>}<button className="ghost-btn" onClick={onOpenHistory}><Clock size={13}/> History</button><span className="user-chip">{userName}</span><button className="ghost-btn" onClick={onLogout}><LogOut size={13}/></button></div></div>;
+ const nav=<div className="topbar"><div className="brand"><span className="brand-icon"><Sparkles size={15}/></span><span>LandWise <b>AI</b></span></div><div className="user-nav">{result?.search_id&&<button className="ghost-btn" onClick={()=>window.dispatchEvent(new CustomEvent("landwise:ask",{detail:result.search_id}))}>Ask about this result</button>}<button className="ghost-btn" onClick={onOpenDocs}><BookOpen size={13}/> Docs</button><button className="ghost-btn" onClick={onOpenHistory}><Clock size={13}/> History</button><span className="user-chip">{userName}</span><button className="ghost-btn" onClick={onLogout}><LogOut size={13}/></button></div></div>;
  if(result)return mode==="affordability"?<AffordabilityResults result={result} currency={currency} coords={coords} onBack={()=>setResult(null)} nav={nav}/>:<Results result={result} mode={mode} area={area} unit={unit} currency={currency} coords={coords} onBack={()=>setResult(null)} nav={nav}/>;
  return <><main className="app"><div className="background-glow glow-a"/><div className="background-glow glow-b"/><div className="dashboard">{nav}<div className="eyebrow">PROPERTY PRICE INTELLIGENCE</div><h1>{mode==="price"?"Find a property estimate":"Find what you can afford"}</h1><p className="subtitle">Evidence-based property estimates using Tavily web evidence and historical ML.</p>
  <div className="property-grid">{PROPERTY_TYPES.map(p=><button key={p.value} className={`property-card ${propertyType===p.value?"active":""}`} onClick={()=>setPropertyType(p.value)}>{p.label}</button>)}</div>
