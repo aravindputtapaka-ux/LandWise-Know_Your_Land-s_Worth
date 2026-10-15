@@ -56,7 +56,19 @@ import os
 
 import httpx
 
+import os
+import hashlib
+import logging
+
 logger = logging.getLogger(__name__)
+
+brevo_key = os.getenv("BREVO_API_KEY", "").strip()
+
+logger.warning(
+    "BREVO_KEY_CHECK: configured=%s fingerprint=%s",
+    bool(brevo_key),
+    hashlib.sha256(brevo_key.encode()).hexdigest() if brevo_key else "missing",
+)
 
 BREVO_ENDPOINT = "https://api.brevo.com/v3/smtp/email"
 
