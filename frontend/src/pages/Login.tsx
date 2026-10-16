@@ -20,7 +20,12 @@ export default function Login({ onBack, onSwitchToSignup, onForgot, onSuccess }:
       <div className="background-glow glow-a" /><div className="background-glow glow-b" />
       <div className="dashboard auth-card">
         <button className="back-button auth-back" onClick={onBack}><ArrowLeft size={16} /> Back</button>
-        <div className="brand auth-brand"><span className="brand-icon"><Sparkles size={15} /></span><span>LandWise <b>AI</b></span></div>
+        <div className="brand auth-brand">
+  <img
+    src="/landwise-logo.png"
+    alt="LandWise AI"
+    className="auth-brand-logo"
+  /><span>LandWise <b>AI</b></span></div>
         <h1>Welcome back</h1>
         <p className="subtitle">Log in to run property estimates and see your saved search history.</p>
         <form onSubmit={submit}>

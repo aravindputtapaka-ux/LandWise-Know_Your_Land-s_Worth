@@ -14,7 +14,7 @@ export default function Landing({ onLogin, onSignup, onDocs }: { onLogin: () => 
       <div className="background-glow glow-b" />
       <div className="landing-shell">
         <header className="topbar landing-topbar">
-          <div className="brand">
+          <div className="brand1">
   <img
     src="/landwise-logo.png"
     alt="LandWise AI"
@@ -35,8 +35,7 @@ export default function Landing({ onLogin, onSignup, onDocs }: { onLogin: () => 
             <button className="analyze landing-cta" onClick={onSignup}>Get started free<ArrowRight size={18} /></button>
             <button className="ghost-btn landing-cta-outline" onClick={onLogin}>I already have an account</button>
           </div>
-          <div className="powered landing-powered"><Sparkles size={13} /> Tavily search <b>+</b> source extraction <b>+</b> validated comparables <b>+</b> ML</div>
-        </section>
+          </section>
 
         <section className="landing-features">
           {FEATURES.map((f) => (

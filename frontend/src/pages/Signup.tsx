@@ -39,7 +39,12 @@ export default function Signup({ onBack, onSwitchToLogin, onSuccess }: { onBack:
       <div className="background-glow glow-a" /><div className="background-glow glow-b" />
       <div className="dashboard auth-card">
         <button className="back-button auth-back" onClick={onBack}><ArrowLeft size={16} /> Back</button>
-        <div className="brand auth-brand"><span className="brand-icon"><Sparkles size={15} /></span><span>LandWise <b>AI</b></span></div>
+        <div className="brand auth-brand">
+          <img
+        src="/landwise-logo.png"
+        alt="LandWise AI"
+        className="app-brand-logo"
+      /><span>LandWise <b>AI</b></span></div>
         {step === "details" ? <>
           <h1>Create your account</h1>
           <p className="subtitle">Create your account and verify your email with a 6-digit OTP.</p>

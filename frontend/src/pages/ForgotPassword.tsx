@@ -41,7 +41,12 @@ export default function ForgotPassword({ onBack, onLogin }: { onBack: () => void
 
   return <main className="app"><div className="background-glow glow-a" /><div className="background-glow glow-b" /><div className="dashboard auth-card">
     <button className="back-button auth-back" onClick={onBack}><ArrowLeft size={16} /> Back</button>
-    <div className="brand auth-brand"><span className="brand-icon"><Sparkles size={15} /></span><span>LandWise <b>AI</b></span></div>
+    <div className="brand auth-brand">
+      <img
+        src="/landwise-logo.png"
+        alt="LandWise AI"
+        className="app-brand-logo"
+      /><span>LandWise <b>AI</b></span></div>
     {step === "email" ? <>
       <h1>Forgot password?</h1><p className="subtitle">Enter your verified email and we'll send a 6-digit OTP to your inbox.</p>
       <form onSubmit={sendOtp}><div className="field"><label>EMAIL</label><div className="search-box"><Mail size={16} /><input type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required /></div></div>
